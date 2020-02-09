@@ -22,7 +22,7 @@ ConVar g_Cvar_TeamFlashMinTime;
 
 public void OnPluginStart()
 {
-	LoadTranslations("teamflashmanager.phrases");
+	LoadTranslations("tfannouncer.phrases");
 	
 	HookEvent("flashbang_detonate", Event_FlashbangDetonate);
 	HookEvent("player_blind", Event_PlayerBlind);
@@ -30,6 +30,8 @@ public void OnPluginStart()
 	g_Cvar_TeamFlashAnnounce = CreateConVar("sm_tfannounce", "1", "Determine whether players should be notified when teammates flashes them or not.", FCVAR_NONE, true, 0.0, true, 1.0);
 	g_Cvar_TeamFlashAnnounceAdmins = CreateConVar("sm_tfannounce_print_to_admins", "1", "Determine whether admins should be notified when players are flashed by teammates or not.", FCVAR_NONE, true, 0.0, true, 1.0);
 	g_Cvar_TeamFlashMinTime = CreateConVar("sm_tfannounce_mintime", "1.5", "Minimum flash duration for announcements.", FCVAR_NONE, true, 0.0);
+	
+	AutoExecConfig(true, "tfannouncer");
 }
 
 public void Event_FlashbangDetonate(Event event, const char[] name, bool dontBroadcast)
