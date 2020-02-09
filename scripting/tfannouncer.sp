@@ -51,7 +51,12 @@ public void Event_FlashbangDetonate(Event event, const char[] name, bool dontBro
 
 public void Event_PlayerBlind(Event event, const char[] name, bool dontBroadcast)
 {
-	if (!g_Cvar_TeamFlashAnnounce.BoolValue || g_ThrowerTeam == CS_TEAM_NONE)
+	if (!g_Cvar_TeamFlashAnnounce.BoolValue && !g_Cvar_TeamFlashAnnounceAdmins.BoolValue)
+	{
+		return;
+	}
+	
+	if (g_ThrowerTeam == CS_TEAM_NONE)
 	{
 		return;
 	}
@@ -68,6 +73,12 @@ public void Event_PlayerBlind(Event event, const char[] name, bool dontBroadcast
 		return;
 	}
 	
+	float flashDuration = GetClientFlashDuration(client);
+	if (flashDuration < g_Cvar_TeamFlashMinTime.FloatValue)
+	{
+		return;
+	}
+	
 	int thrower = GetClientOfUserId(g_ThrowerId);
 	if (!thrower)
 	{
@@ -75,18 +86,15 @@ public void Event_PlayerBlind(Event event, const char[] name, bool dontBroadcast
 		return;
 	}
 	
-	float flashDuration = GetClientFlashDuration(client);
-	if (flashDuration < g_Cvar_TeamFlashMinTime.FloatValue)
-	{
-		return;
-	}
-	
 	char clientName[MAX_NAME_LENGTH], throwerName[MAX_NAME_LENGTH];
 	GetClientName(client, clientName, sizeof(clientName));
 	GetClientName(thrower, throwerName, sizeof(throwerName));
-
-	CPrintToChat(client, "[SM] %t", "Flashed by Teammate", throwerName);
-	CPrintToChat(thrower, "[SM] %t", "Flashed a Teammate", clientName);
+	
+	if (g_Cvar_TeamFlashAnnounce.BoolValue)
+	{
+		CPrintToChat(client, "[SM] %t", "Flashed by Teammate", throwerName);
+		CPrintToChat(thrower, "[SM] %t", "Flashed a Teammate", clientName);
+	}
 	
 	if (g_Cvar_TeamFlashAnnounceAdmins.BoolValue)
 	{
