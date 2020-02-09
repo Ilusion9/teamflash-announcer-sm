@@ -1,5 +1,6 @@
 # Description
 Players will be announced when teammates flashes them. Admins can be notified as well.
+
 Add "sm_tfannounce_admins" override in admin_overrides.cfg to change the permissions for the admins which can see who flashed whom.
 
 # Alliedmods
