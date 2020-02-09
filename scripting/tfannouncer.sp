@@ -90,7 +90,7 @@ public void Event_PlayerBlind(Event event, const char[] name, bool dontBroadcast
 	
 	if (g_Cvar_TeamFlashAnnounceAdmins.BoolValue)
 	{
-		PrintToChatAdmins(client, "[SM] %t", "Player Flashed by Teammate", clientName, throwerName);
+		SendToChatAdmins(client, "[SM] %t", "Player Flashed by Teammate", clientName, throwerName);
 	}
 }
 
