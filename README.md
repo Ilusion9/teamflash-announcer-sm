@@ -1,7 +1,9 @@
 # Description
-Players will be announced when teammates flashes them. Admins can be notified as well.
+Players will be announced when teammates flashes them. Admins can be informed as well.
 
-Add "TeamFlashAnnouncerAdmin" override in admin_overrides.cfg to change the permissions for the admins which can see who flashed whom.
+Add "TeamFlashAnnouncer" override in admin_overrides.cfg, so only players with specific flag can be announced about who flashed them.
+
+Add "TeamFlashAnnouncerAdmin" override in admin_overrides.cfg to change the permissions for admins which can see who flashed whom.
 
 # Alliedmods
 https://forums.alliedmods.net/showthread.php?p=2683230
