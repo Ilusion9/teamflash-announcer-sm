@@ -86,8 +86,15 @@ public void Event_PlayerBlind(Event event, const char[] name, bool dontBroadcast
 	
 	if (g_Cvar_InformPlayers.BoolValue)
 	{
-		CPrintToChat(client, "[SM] %t", "Flashed by Teammate", throwerName);
-		CPrintToChat(thrower, "[SM] %t", "Flashed a Teammate", clientName);
+		if (CheckCommandAccess(client, "TeamFlashAnnouncer", 0, true))
+		{
+			CPrintToChat(client, "[SM] %t", "Flashed by Teammate", throwerName);
+		}
+		
+		if (CheckCommandAccess(thrower, "TeamFlashAnnouncer", 0, true))
+		{
+			CPrintToChat(thrower, "[SM] %t", "Flashed a Teammate", clientName);
+		}
 	}
 	
 	if (g_Cvar_InformAdmins.BoolValue)
