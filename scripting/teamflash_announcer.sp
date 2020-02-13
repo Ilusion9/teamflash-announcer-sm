@@ -8,30 +8,30 @@ public Plugin myinfo =
 {
     name = "Team Flash Announcer",
     author = "Ilusion9",
-    description = "Players will be announced when teammates flashes them.",
-    version = "1.0",
+    description = "Players and admins can be informed about flashes made by teammates.",
+    version = "1.1",
     url = "https://github.com/Ilusion9/"
 };
 
 int g_ThrowerId;
 int g_ThrowerTeam;
 
-ConVar g_Cvar_TeamFlashAnnounce;
-ConVar g_Cvar_TeamFlashAnnounceAdmins;
-ConVar g_Cvar_TeamFlashMinTime;
+ConVar g_Cvar_InformPlayers;
+ConVar g_Cvar_InformAdmins;
+ConVar g_Cvar_InformMinTime;
 
 public void OnPluginStart()
 {
-	LoadTranslations("tfannouncer.phrases");
+	LoadTranslations("teamflash_announcer.phrases");
 	
 	HookEvent("flashbang_detonate", Event_FlashbangDetonate);
 	HookEvent("player_blind", Event_PlayerBlind);
 	
-	g_Cvar_TeamFlashAnnounce = CreateConVar("sm_tfannounce", "1", "Determine whether players should be notified when teammates flashes them or not.", FCVAR_NONE, true, 0.0, true, 1.0);
-	g_Cvar_TeamFlashAnnounceAdmins = CreateConVar("sm_tfannounce_print_to_admins", "1", "Determine whether admins should be notified when players are flashed by teammates or not.", FCVAR_NONE, true, 0.0, true, 1.0);
-	g_Cvar_TeamFlashMinTime = CreateConVar("sm_tfannounce_mintime", "1.5", "Minimum flash duration for announcements.", FCVAR_NONE, true, 0.0);
+	g_Cvar_InformPlayers = CreateConVar("sm_teamflash_inform_players", "1", "Inform players when teammates flashes them?", FCVAR_NONE, true, 0.0, true, 1.0);
+	g_Cvar_InformAdmins = CreateConVar("sm_teamflash_inform_admins", "1", "Inform admins when players are flashed by teammates?", FCVAR_NONE, true, 0.0, true, 1.0);
+	g_Cvar_InformMinTime = CreateConVar("sm_teamflash_inform_mintime", "1.5", "Minimum flash duration for announcements.", FCVAR_NONE, true, 0.0);
 	
-	AutoExecConfig(true, "tfannouncer");
+	AutoExecConfig(true, "teamflash_announcer");
 }
 
 public void Event_FlashbangDetonate(Event event, const char[] name, bool dontBroadcast)
@@ -51,12 +51,7 @@ public void Event_FlashbangDetonate(Event event, const char[] name, bool dontBro
 
 public void Event_PlayerBlind(Event event, const char[] name, bool dontBroadcast)
 {
-	if (!g_Cvar_TeamFlashAnnounce.BoolValue && !g_Cvar_TeamFlashAnnounceAdmins.BoolValue)
-	{
-		return;
-	}
-	
-	if (g_ThrowerTeam == CS_TEAM_NONE)
+	if (!g_Cvar_InformPlayers.BoolValue && !g_Cvar_InformAdmins.BoolValue || g_ThrowerTeam == CS_TEAM_NONE)
 	{
 		return;
 	}
@@ -73,16 +68,15 @@ public void Event_PlayerBlind(Event event, const char[] name, bool dontBroadcast
 		return;
 	}
 	
-	float flashDuration = GetClientFlashDuration(client);
-	if (flashDuration < g_Cvar_TeamFlashMinTime.FloatValue)
+	int thrower = GetClientOfUserId(g_ThrowerId);
+	if (!thrower)
 	{
 		return;
 	}
 	
-	int thrower = GetClientOfUserId(g_ThrowerId);
-	if (!thrower)
+	float flashDuration = GetClientFlashDuration(client);
+	if (flashDuration < g_Cvar_InformMinTime.FloatValue)
 	{
-		CPrintToChat(client, "[SM] %t", "Flashed by Disconnected Teammate");
 		return;
 	}
 	
@@ -90,13 +84,13 @@ public void Event_PlayerBlind(Event event, const char[] name, bool dontBroadcast
 	GetClientName(client, clientName, sizeof(clientName));
 	GetClientName(thrower, throwerName, sizeof(throwerName));
 	
-	if (g_Cvar_TeamFlashAnnounce.BoolValue)
+	if (g_Cvar_InformPlayers.BoolValue)
 	{
 		CPrintToChat(client, "[SM] %t", "Flashed by Teammate", throwerName);
 		CPrintToChat(thrower, "[SM] %t", "Flashed a Teammate", clientName);
 	}
 	
-	if (g_Cvar_TeamFlashAnnounceAdmins.BoolValue)
+	if (g_Cvar_InformAdmins.BoolValue)
 	{
 		SendToChatAdmins(client, "[SM] %t", "Player Flashed by Teammate", clientName, throwerName);
 	}
@@ -107,7 +101,7 @@ void SendToChatAdmins(int client, const char[] format, any ...)
 	char buffer[192];
 	for (int i = 1; i <= MaxClients; i++)
 	{
-		if (i != client && IsClientInGame(i) && CheckCommandAccess(i, "sm_tfannounce_admins", ADMFLAG_GENERIC))
+		if (i != client && IsClientInGame(i) && CheckCommandAccess(i, "sm_teamflash_admins", ADMFLAG_GENERIC))
 		{
 			SetGlobalTransTarget(i);
 			VFormat(buffer, sizeof(buffer), format, 3);
