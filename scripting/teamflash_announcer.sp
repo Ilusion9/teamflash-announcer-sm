@@ -101,7 +101,7 @@ void SendToChatAdmins(int client, const char[] format, any ...)
 	char buffer[192];
 	for (int i = 1; i <= MaxClients; i++)
 	{
-		if (i != client && IsClientInGame(i) && CheckCommandAccess(i, "sm_teamflash_admins", ADMFLAG_GENERIC))
+		if (i != client && IsClientInGame(i) && CheckCommandAccess(i, "TeamFlashAnnouncerAdmin", ADMFLAG_GENERIC))
 		{
 			SetGlobalTransTarget(i);
 			VFormat(buffer, sizeof(buffer), format, 3);
