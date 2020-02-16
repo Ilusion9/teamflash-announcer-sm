@@ -1,20 +1,26 @@
 "Phrases"
 {
+	"Flashed by Disconnected Teammate"
+	{
+		"#format"		"{1:0.1f}"
+		"en"			"You have been flashed by a disconnected player for {1} seconds."
+	}
+
 	"Flashed by Teammate"
 	{
-		"#format"		"{1:s}"
-		"en"			"You have been flashed by your teammate: {red}{1}{default}"
+		"#format"		"{1:s},{2:0.1f}"
+		"en"			"You have been flashed by {purple}{1}{default} for {2} seconds."
 	}
 	
 	"Flashed a Teammate"
 	{
-		"#format"		"{1:s}"
-		"en"			"You flashed your teammate: {lime}{1}{default}"
+		"#format"		"{1:s},{2:0.1f}"
+		"en"			"You flashed {orange}{1}{default} for {2} seconds."
 	}
 	
 	"Player Flashed by Teammate"
 	{
-		"#format"		"{1:s},{2:s}"
-		"en"			"{orange}{1}{default} has been flashed by his teammate: {red}{2}{default}"
+		"#format"		"{1:s},{2:s},{3:0.1f}"
+		"en"			"{orange}{1}{default} has been flashed by {red}{2}{default} for {3} seconds."
 	}
 }
