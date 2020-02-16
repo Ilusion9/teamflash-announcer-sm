@@ -23,7 +23,6 @@ enum struct ThrowerInfo
 
 ThrowerInfo g_Thrower;
 IntMap g_FlashbangsTeam;
-IntMap g_DisconnectedPlayersName;
 
 ConVar g_Cvar_InformPlayers;
 ConVar g_Cvar_InformAdmins;
@@ -33,11 +32,9 @@ public void OnPluginStart()
 {
 	LoadTranslations("teamflash_announcer.phrases");
 	g_FlashbangsTeam = new IntMap();
-	g_DisconnectedPlayersName = new IntMap();
 
 	HookEvent("flashbang_detonate", Event_FlashbangDetonate);
 	HookEvent("player_blind", Event_PlayerBlind);
-	HookEvent("player_disconnect", Event_PlayerDisconnect);
 	
 	g_Cvar_InformPlayers = CreateConVar("sm_teamflash_inform_players", "1", "Inform players when teammates flashes them?", FCVAR_NONE, true, 0.0, true, 1.0);
 	g_Cvar_InformAdmins = CreateConVar("sm_teamflash_inform_admins", "1", "Inform admins when players are flashed by their teammates?", FCVAR_NONE, true, 0.0, true, 1.0);
@@ -49,7 +46,6 @@ public void OnPluginStart()
 public void OnMapStart()
 {
 	g_FlashbangsTeam.Clear();
-	g_DisconnectedPlayersName.Clear();
 }
 
 public void OnEntityCreated(int entity, const char[] classname)
@@ -110,7 +106,7 @@ public void Event_PlayerBlind(Event event, const char[] name, bool dontBroadcast
 	
 	int client = GetClientOfUserId(userId);
 	if (!client || !IsClientInGame(client) || !IsPlayerAlive(client) || GetClientTeam(client) != g_Thrower.Team)
-	{
+	{ 
 		return;
 	}
 	
@@ -120,48 +116,38 @@ public void Event_PlayerBlind(Event event, const char[] name, bool dontBroadcast
 		return;
 	}
 	
-	char clientName[MAX_NAME_LENGTH], throwerName[MAX_NAME_LENGTH];
 	int thrower = GetClientOfUserId(g_Thrower.Id);
-	
-	if (thrower)
+	if (!thrower)
 	{
-		GetClientName(thrower, throwerName, sizeof(throwerName));
-	}
-	else
-	{
-		if (!g_DisconnectedPlayersName.GetString(userId, throwerName, sizeof(throwerName)))
+		if (CheckCommandAccess(client, "TeamFlashAnnouncer", 0, true))
 		{
-			return;
+			CPrintToChat(client, "{green}[TeamFlash]{default} %t", "Flashed by Disconnected Teammate", flashDuration);
 		}
+		
+		return;
 	}
 	
+	char clientName[MAX_NAME_LENGTH], throwerName[MAX_NAME_LENGTH];
 	GetClientName(client, clientName, sizeof(clientName));
+	GetClientName(thrower, throwerName, sizeof(throwerName));
+
 	if (g_Cvar_InformPlayers.BoolValue)
 	{
 		if (CheckCommandAccess(client, "TeamFlashAnnouncer", 0, true))
 		{
-			CPrintToChat(client, "[SM] %t", "Flashed by Teammate", throwerName);
+			CPrintToChat(client, "{green}[TeamFlash]{default} %t", "Flashed by Teammate", throwerName, flashDuration);
 		}
 		
 		if (CheckCommandAccess(thrower, "TeamFlashAnnouncer", 0, true))
 		{
-			CPrintToChat(thrower, "[SM] %t", "Flashed a Teammate", clientName);
+			CPrintToChat(thrower, "{green}[TeamFlash]{default} %t", "Flashed a Teammate", clientName, flashDuration);
 		}
 	}
 	
 	if (g_Cvar_InformAdmins.BoolValue)
 	{
-		SendToChatAdmins(client, "[SM] %t", "Player Flashed by Teammate", clientName, throwerName);
+		SendToChatAdmins(client, "{green}[TeamFlash]{default} %t", "Player Flashed by Teammate", clientName, throwerName, flashDuration);
 	}
-}
-
-public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroadcast)
-{
-	int userId = event.GetInt("userid");
-	char clientName[MAX_NAME_LENGTH];
-	event.GetString("name", clientName, sizeof(clientName));
-	
-	g_DisconnectedPlayersName.SetString(userId, name);
 }
 
 void SendToChatAdmins(int client, const char[] format, any ...)
