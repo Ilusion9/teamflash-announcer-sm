@@ -15,3 +15,6 @@ sm_teamflash_inform_players 1 - Inform players when teammates flashes them?
 sm_teamflash_inform_admins 1 - Inform admins when players are flashed by teammates?
 sm_teamflash_inform_mintime 1.5 - Minimum flash duration for announcements.
 ```
+
+# To do
+If there are too many reports about team flashes made by disconnected players, then I can show their name/steamid.
