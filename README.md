@@ -1,5 +1,5 @@
 # Description
-Players and admins can be informed about flashes made by teammates.
+Players and admins can be informed when players are flashed by their teammates.
 
 # Alliedmods
 https://forums.alliedmods.net/showthread.php?p=2683230
