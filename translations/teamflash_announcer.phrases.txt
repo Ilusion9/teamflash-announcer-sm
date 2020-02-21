@@ -27,6 +27,6 @@
 	"Player Flashed by Teammate"
 	{
 		"#format"		"{1:s},{2:s},{3:0.1f}"
-		"en"			"{orange}{1}{default} has been flashed by {red}{2}{default} for {3} seconds."
+		"en"			"{lime}{1}{default} has been flashed by {red}{2}{default} for {3} seconds."
 	}
 }
