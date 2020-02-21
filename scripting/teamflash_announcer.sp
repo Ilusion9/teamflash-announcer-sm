@@ -116,7 +116,9 @@ public void Event_PlayerBlind(Event event, const char[] name, bool dontBroadcast
 		return;
 	}
 	
+	flashDuration = flashDuration < 0.1 ? 0.1 : flashDuration;
 	int thrower = GetClientOfUserId(g_Thrower.Id);
+	
 	if (!thrower)
 	{
 		if (CheckCommandAccess(client, "TeamFlashAnnouncer", 0, true))
