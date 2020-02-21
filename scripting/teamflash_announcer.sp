@@ -3,14 +3,14 @@
 #include <sdktools>
 #include <cstrike>
 #include <intmap>
-#include <colorlib>
+#include <colorlib_sample>
 #pragma newdecls required
 
 public Plugin myinfo =
 {
     name = "Team Flash Announcer",
     author = "Ilusion9",
-    description = "Players and admins can be informed about flashes made by teammates",
+    description = "Players and admins can be informed when players are flashed by their teammates.",
     version = "1.1",
     url = "https://github.com/Ilusion9/"
 };
@@ -121,7 +121,7 @@ public void Event_PlayerBlind(Event event, const char[] name, bool dontBroadcast
 	{
 		if (CheckCommandAccess(client, "TeamFlashAnnouncer", 0, true))
 		{
-			CPrintToChat(client, "{green}[TeamFlash]{default} %t", "Flashed by Disconnected Teammate", flashDuration);
+			CPrintToChat(client, "\x04[TeamFlash]\x01 %t", "Flashed by Disconnected Teammate", flashDuration);
 		}
 		
 		return;
@@ -135,18 +135,18 @@ public void Event_PlayerBlind(Event event, const char[] name, bool dontBroadcast
 	{
 		if (CheckCommandAccess(client, "TeamFlashAnnouncer", 0, true))
 		{
-			CPrintToChat(client, "{green}[TeamFlash]{default} %t", "Flashed by Teammate", throwerName, flashDuration);
+			CPrintToChat(client, "\x04[TeamFlash]\x01 %t", "Flashed by Teammate", throwerName, flashDuration);
 		}
 		
 		if (CheckCommandAccess(thrower, "TeamFlashAnnouncer", 0, true))
 		{
-			CPrintToChat(thrower, "{green}[TeamFlash]{default} %t", "Flashed a Teammate", clientName, flashDuration);
+			CPrintToChat(thrower, "\x04[TeamFlash]\x01 %t", "Flashed a Teammate", clientName, flashDuration);
 		}
 	}
 	
 	if (g_Cvar_InformAdmins.BoolValue)
 	{
-		SendToChatAdmins(client, "{green}[TeamFlash]{default} %t", "Player Flashed by Teammate", clientName, throwerName, flashDuration);
+		SendToChatAdmins(client, "\x04[TeamFlash]\x01 %t", "Player Flashed by Teammate", clientName, throwerName, flashDuration);
 	}
 }
 
