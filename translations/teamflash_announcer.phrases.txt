@@ -15,18 +15,18 @@
 	"Flashed by Teammate"
 	{
 		"#format"		"{1:s},{2:0.1f}"
-		"en"			"You have been flashed by {orange}{1}{default} for {2} seconds."
+		"en"			"You have been flashed by {lightred}{1}{default} for {2} seconds."
 	}
 	
 	"Flashed a Teammate"
 	{
 		"#format"		"{1:s},{2:0.1f}"
-		"en"			"You flashed {purple}{1}{default} for {2} seconds."
+		"en"			"You flashed {lime}{1}{default} for {2} seconds."
 	}
 	
 	"Player Flashed by Teammate"
 	{
 		"#format"		"{1:s},{2:s},{3:0.1f}"
-		"en"			"{purple}{1}{default} has been flashed by {orange}{2}{default} for {3} seconds."
+		"en"			"{lime}{1}{default} has been flashed by {red}{2}{default} for {3} seconds."
 	}
 }
