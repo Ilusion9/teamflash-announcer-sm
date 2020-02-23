@@ -15,9 +15,10 @@ public Plugin myinfo =
     url = "https://github.com/Ilusion9/"
 };
 
+#define CHAT_MESSAGE_PREFIX	"{lime}[TeamFlash]{default} "
 enum struct ThrowerInfo
 {
-	int Id;
+	int userId;
 	int Team;
 }
 
@@ -80,7 +81,7 @@ public void Frame_FlashbangProjectileSpawn(any data)
 
 public void Event_FlashbangDetonate(Event event, const char[] name, bool dontBroadcast)
 {
-	g_Thrower.Id = event.GetInt("userid");
+	g_Thrower.userId = event.GetInt("userid");
 	int entity = event.GetInt("entityid");
 	
 	if (!g_FlashbangsTeam.GetValue(entity, g_Thrower.Team))
@@ -99,7 +100,7 @@ public void Event_PlayerBlind(Event event, const char[] name, bool dontBroadcast
 	}
 	
 	int userId = event.GetInt("userid");
-	if (g_Thrower.Id == userId)
+	if (g_Thrower.userId == userId)
 	{
 		return;
 	}
@@ -117,13 +118,13 @@ public void Event_PlayerBlind(Event event, const char[] name, bool dontBroadcast
 	}
 	
 	flashDuration = flashDuration < 0.1 ? 0.1 : flashDuration;
-	int thrower = GetClientOfUserId(g_Thrower.Id);
+	int thrower = GetClientOfUserId(g_Thrower.userId);
 	
 	if (!thrower)
 	{
 		if (CheckCommandAccess(client, "TeamFlashAnnouncer", 0, true))
 		{
-			CPrintToChat(client, "\x04[TeamFlash]\x01 %t", "Flashed by Disconnected Teammate", flashDuration);
+			CPrintToChat(client, "%s%t", CHAT_MESSAGE_PREFIX, "Flashed by Disconnected Teammate", flashDuration);
 		}
 		
 		return;
@@ -137,18 +138,18 @@ public void Event_PlayerBlind(Event event, const char[] name, bool dontBroadcast
 	{
 		if (CheckCommandAccess(client, "TeamFlashAnnouncer", 0, true))
 		{
-			CPrintToChat(client, "\x04[TeamFlash]\x01 %t", "Flashed by Teammate", throwerName, flashDuration);
+			CPrintToChat(client, "%s%t", CHAT_MESSAGE_PREFIX, "Flashed by Teammate", throwerName, flashDuration);
 		}
 		
 		if (CheckCommandAccess(thrower, "TeamFlashAnnouncer", 0, true))
 		{
-			CPrintToChat(thrower, "\x04[TeamFlash]\x01 %t", "Flashed a Teammate", clientName, flashDuration);
+			CPrintToChat(thrower, "%s%t", CHAT_MESSAGE_PREFIX, "Flashed a Teammate", clientName, flashDuration);
 		}
 	}
 	
 	if (g_Cvar_InformAdmins.BoolValue)
 	{
-		SendToChatAdmins(client, "\x04[TeamFlash]\x01 %t", "Player Flashed by Teammate", clientName, throwerName, flashDuration);
+		SendToChatAdmins(client, "%s%t", CHAT_MESSAGE_PREFIX, "Player Flashed by Teammate", clientName, throwerName, flashDuration);
 	}
 }
 
