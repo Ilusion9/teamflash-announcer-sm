@@ -15,7 +15,6 @@ public Plugin myinfo =
     url = "https://github.com/Ilusion9/"
 };
 
-char g_ChatMsgPrefix[] = "{lime}[TeamFlash]{default} ";
 enum struct ThrowerInfo
 {
 	int userId;
@@ -124,7 +123,7 @@ public void Event_PlayerBlind(Event event, const char[] name, bool dontBroadcast
 	{
 		if (CheckCommandAccess(client, "TeamFlashAnnouncer", 0, true))
 		{
-			CPrintToChat(client, "%s%t", g_ChatMsgPrefix, "Flashed by Disconnected Teammate", flashDuration);
+			CPrintToChat(client, "%t", "Flashed by Disconnected Teammate", flashDuration);
 		}
 		
 		return;
@@ -138,18 +137,18 @@ public void Event_PlayerBlind(Event event, const char[] name, bool dontBroadcast
 	{
 		if (CheckCommandAccess(client, "TeamFlashAnnouncer", 0, true))
 		{
-			CPrintToChat(client, "%s%t", g_ChatMsgPrefix, "Flashed by Teammate", throwerName, flashDuration);
+			CPrintToChat(client, "%t", "Flashed by Teammate", throwerName, flashDuration);
 		}
 		
 		if (CheckCommandAccess(thrower, "TeamFlashAnnouncer", 0, true))
 		{
-			CPrintToChat(thrower, "%s%t", g_ChatMsgPrefix, "Flashed a Teammate", clientName, flashDuration);
+			CPrintToChat(thrower, "%t", "Flashed a Teammate", clientName, flashDuration);
 		}
 	}
 	
 	if (g_Cvar_InformAdmins.BoolValue)
 	{
-		SendToChatAdmins(client, "%s%t", g_ChatMsgPrefix, "Player Flashed by Teammate", clientName, throwerName, flashDuration);
+		SendToChatAdmins(client, "%t", "Player Flashed by Teammate", clientName, throwerName, flashDuration);
 	}
 }
 
