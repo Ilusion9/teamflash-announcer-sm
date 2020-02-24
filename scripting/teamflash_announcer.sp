@@ -63,7 +63,9 @@ public void SDK_OnFlashbangProjectileSpawn_Post(int entity)
 
 public void Frame_FlashbangProjectileSpawn(any data)
 {
-	int entity = EntRefToEntIndex(view_as<int>(data));
+	int reference = view_as<int>(data);
+	int entity = EntRefToEntIndex(reference);
+	
 	if (entity == INVALID_ENT_REFERENCE)
 	{
 		return;
@@ -75,20 +77,21 @@ public void Frame_FlashbangProjectileSpawn(any data)
 		return;
 	}
 	
-	g_FlashbangsTeam.SetValue(entity, GetClientTeam(thrower));
+	g_FlashbangsTeam.SetValue(reference, GetClientTeam(thrower));
 }
 
 public void Event_FlashbangDetonate(Event event, const char[] name, bool dontBroadcast)
 {
 	g_Thrower.userId = event.GetInt("userid");
 	int entity = event.GetInt("entityid");
+	int reference = EntIndexToEntRef(entity);
 	
-	if (!g_FlashbangsTeam.GetValue(entity, g_Thrower.Team))
+	if (!g_FlashbangsTeam.GetValue(reference, g_Thrower.Team))
 	{
 		g_Thrower.Team = CS_TEAM_NONE;
 	}
 	
-	g_FlashbangsTeam.Remove(entity);
+	g_FlashbangsTeam.Remove(reference);
 }
 
 public void Event_PlayerBlind(Event event, const char[] name, bool dontBroadcast)
