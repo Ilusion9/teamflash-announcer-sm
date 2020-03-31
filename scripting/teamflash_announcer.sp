@@ -3,7 +3,7 @@
 #include <sdktools>
 #include <cstrike>
 #include <intmap>
-#include <colorlib_sample>
+#include <sourcecolors>
 #pragma newdecls required
 
 public Plugin myinfo =
@@ -58,6 +58,7 @@ public void OnEntityCreated(int entity, const char[] classname)
 
 public void SDK_OnFlashbangProjectileSpawn_Post(int entity)
 {
+	// Entity's properties can be retrieved after 1 frame
 	RequestFrame(Frame_FlashbangProjectileSpawn, EntIndexToEntRef(entity));
 }
 
@@ -71,12 +72,15 @@ public void Frame_FlashbangProjectileSpawn(any data)
 		return;
 	}
 	
+	// Get the thrower of this flashbang
 	int thrower = GetEntPropEnt(entity, Prop_Send, "m_hThrower");	
 	if (thrower < 1 || thrower > MaxClients || !IsClientInGame(thrower))
 	{
 		return;
 	}
 	
+	// Set the team of this flashbang
+	// Players can change their teams until the flash explodes, so we set the team here
 	g_FlashbangsTeam.SetValue(reference, GetClientTeam(thrower));
 }
 
@@ -86,6 +90,7 @@ public void Event_FlashbangDetonate(Event event, const char[] name, bool dontBro
 	int entity = event.GetInt("entityid");
 	int reference = EntIndexToEntRef(entity);
 	
+	// Set the team globally and free the memory from the intmap
 	if (!g_FlashbangsTeam.GetValue(reference, g_Thrower.Team))
 	{
 		g_Thrower.Team = CS_TEAM_NONE;
@@ -101,6 +106,7 @@ public void Event_PlayerBlind(Event event, const char[] name, bool dontBroadcast
 		return;
 	}
 	
+	// Own flash
 	int userId = event.GetInt("userid");
 	if (g_Thrower.userId == userId)
 	{
@@ -113,15 +119,17 @@ public void Event_PlayerBlind(Event event, const char[] name, bool dontBroadcast
 		return;
 	}
 	
+	// Check the minimum flash duration
 	float flashDuration = GetClientFlashDuration(client);
 	if (flashDuration < g_Cvar_InformMinTime.FloatValue)
 	{
 		return;
 	}
-	
 	flashDuration = flashDuration < 0.1 ? 0.1 : flashDuration;
-	int thrower = GetClientOfUserId(g_Thrower.userId);
 	
+	// Check if the thrower has disconnected
+	// TO DO: display their name and maybe their steamid
+	int thrower = GetClientOfUserId(g_Thrower.userId);
 	if (!thrower)
 	{
 		if (CheckCommandAccess(client, "TeamFlashAnnouncer", 0, true))
