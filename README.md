@@ -2,8 +2,8 @@
 Players and admins can be informed when players are flashed by their teammates.
 
 # Dependencies
-Sourcecolors (include file) - https://github.com/Ilusion9/sourcecolors-inc-sm
-Intmap (include-file) - https://github.com/Ilusion9/intmap-inc-sm
+- Sourcecolors (include file) - https://github.com/Ilusion9/sourcecolors-inc-sm
+- Intmap (include-file) - https://github.com/Ilusion9/intmap-inc-sm
 
 # Alliedmods
 https://forums.alliedmods.net/showthread.php?p=2683230
